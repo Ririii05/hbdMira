@@ -466,12 +466,12 @@ video {
 
 <div id="screen3">
   <video id="birthdayVideo" controls preload="auto">
-    <source src="hapibday.mp4" type="video/mp4" />
+    <source src="hbd.mp4" type="video/mp4" />
     Your browser does not support the video tag.
   </video>
 </div>
 
- 
+ <audio id="bgMusic" src="bgmusic.mp3" loop></audio>
 
 <script>
   const candle = document.getElementById("candle");
@@ -483,13 +483,15 @@ video {
   const screen1 = document.getElementById("screen1");
   const screen3 = document.getElementById("screen3");
   const birthdayVideo = document.getElementById("birthdayVideo");
-  
+  const bgMusic = document.getElementById("bgMusic"); // 🎵 Background music element
+
   let audioContext;
   let analyser;
   let microphone;
   let dataArray;
   let isBlown = false;
 
+  // 🔊 Start mic and music together
   function startMic() {
     navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
       audioContext = new AudioContext();
@@ -499,6 +501,10 @@ video {
       analyser.fftSize = 256;
       const bufferLength = analyser.frequencyBinCount;
       dataArray = new Uint8Array(bufferLength);
+      
+      // 🎵 Start playing background music
+      playBackgroundMusic();
+
       listenVolume();
     }).catch(e => alert("Mic error: " + e.message));
   }
@@ -511,12 +517,15 @@ video {
     else requestAnimationFrame(listenVolume);
   }
 
+  // 💨 Candle blow-out animation
   function blowOutCandle() {
     if (isBlown) return;
     isBlown = true;
+
     flame.style.animation = "fadeOut 1s forwards";
     puff.style.opacity = "1";
     puff.style.transform = "translateX(-50%) translateY(-25px)";
+
     setTimeout(() => {
       flame.style.opacity = "0";
       puff.style.opacity = "0";
@@ -525,7 +534,11 @@ video {
     }, 1200);
   }
 
+  // ▶️ When user clicks Play
   playBtn.onclick = () => {
+    // ⏹ Stop background music before switching
+    stopBackgroundMusic();
+
     screen1.classList.remove("active");
     screen3.classList.add("active");
     birthdayVideo.play();
@@ -535,8 +548,24 @@ video {
     nextBtn.disabled = false;
   });
 
+  // 🎵 Background music functions
+  function playBackgroundMusic() {
+    bgMusic.volume = 0.5; // Volume level (0.0 to 1.0)
+    bgMusic.play().catch(() => {
+      console.log("Autoplay blocked; will start after user interaction.");
+    });
+  }
+
+  function stopBackgroundMusic() {
+    bgMusic.pause();
+    bgMusic.currentTime = 0;
+  }
+
+  // 🔁 Start mic + music when page loads
   window.onload = () => startMic();
 </script>
+
 </body>
 </html>
+
 
