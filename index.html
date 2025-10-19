@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>HBD AYA</title>
+  <style>
+  :root {
+  --cake-color: #a678d4;   
+  --icing-color: #8e44ad;  
+  --icing-highlight: #c39bd3; 
+  --cherry-color: #e63946; 
+  --cherry-gloss: #ff6b6b; 
+}
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background: #000000;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+z-index: 1;
+    }
+
+    
+body::before {
+  content: "";
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+   z-index: 0;
+  pointer-events: none;
+
+
+  background-color: #470c44;
+
+  background-image:
+    radial-gradient(white 0.8px, transparent 0.8px),
+    radial-gradient(white 1.2px, transparent 1.2px),
+     radial-gradient(white 1.4px, transparent 1.4px),
+    radial-gradient(white 1px, transparent 1px);
+   
+  background-size: 
+    100px 100px, 
+    150px 150px, 
+    120px 120px,
+    200px 200px;
+    
+  background-position: 
+    0 0, 
+    30px 60px, 
+     10px 90px,
+    70px 90px;
+
+  animation: twinkle 4s ease-in-out infinite alternate;
+  opacity: 0.8;
+  transition: opacity 0.5s;
+}
+
+@keyframes twinkle {
+  0% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1.01);
+  }
+}
+
+
+    #screen1, #screen3 {
+      width: 100%;
+      max-width: 700px;
+      min-height: 100vh;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    #screen1.active, #screen3.active {
+      display: flex;
+    }
+
+    .box-canvas {
+      position: relative;
+      width: 150px;
+      height: 170px;
+    }
+
+    .plate {
+      position: absolute;
+      bottom: 15px;
+      width: 175px;
+      height: 90px;
+      background: #BFBFBF;
+      border-radius: 50%;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .cake-side {
+      position: absolute;
+      top: 55px;
+      width: 150px;
+      height: 90px;
+      background: var(--cake-color);
+      border-radius: 0 0 50% 50%;
+      overflow: hidden;
+    }
+
+    .cake-side::before,
+    .cake-side::after {
+      content: '';
+      position: absolute;
+      width: 150px;
+      height: 90px;
+      border-radius: 0 0 50% 50%;
+      top: -30px;
+    }
+
+    .cake-side::before {
+      background: white;
+      top: -20px;
+    }
+
+    .cake-side::after {
+      background: var(--cake-color);
+    }
+
+    .cake-top {
+      position: absolute;
+      top: 20px;
+      width: 150px;
+      height: 75px;
+      background: var(--icing-color);
+      border-radius: 50%;
+      border-bottom: 4px solid var(--icing-highlight);
+    }
+
+    .drips {
+      position: absolute;
+      display: flex;
+      width: 150px;
+      height: 70px;
+      top: 55px;
+    }
+
+    .drip {
+      background: var(--icing-color);
+      border-radius: 0 0 50% 50% / 0 0 20% 20%;
+    }
+
+    .drip:nth-child(1) { height: 50px; width: 20px; }
+    .drip:nth-child(2) { height: 50px; width: 15px; }
+    .drip:nth-child(3) { height: 50px; width: 20px; }
+    .drip:nth-child(4) { height: 60px; width: 25px; }
+    .drip:nth-child(5) { height: 65px; width: 25px; }
+    .drip:nth-child(6) { height: 50px; width: 20px; }
+    .drip:nth-child(7) { height: 60px; width: 15px; }
+    .drip:nth-child(8) { height: 35px; width: 10px; }
+
+    .candle {
+      position: absolute;
+      left: 50%;
+      top: 10px;
+      transform: translateX(-50%);
+      width: 8px;
+      height: 50px;
+      background: repeating-linear-gradient(
+        45deg,
+        white,
+        white 4px,
+        #f96bce 4px,
+        #f96bce 6px
+      );
+      border-radius: 10% 10% 20% 20%;
+      z-index: 5;
+    }
+
+    .candle::after {
+      content: '';
+      position: absolute;
+      top: -5px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 1px;
+      height: 5px;
+      background: black;
+    }
+
+    .flame {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      top: -12px;
+      height: 10px;
+      width: 10px;
+      background: #F78F4E;
+      border-radius: 50%;
+      border: 2px solid yellow;
+      animation: flicker 0.15s infinite alternate;
+    }
+
+    .flame::before,
+    .flame::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 0;
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+    }
+
+    .flame::before {
+      top: -10px;
+      border-bottom: 10px solid yellow;
+    }
+
+    .flame::after {
+      top: -6px;
+      border-bottom: 10px solid #F78F4E;
+    }
+
+    .puff {
+      position: absolute;
+      top: -40px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 2.4rem;
+      opacity: 0;
+      transition: all 1s ease;
+      pointer-events: none;
+      user-select: none;
+      z-index: 12;
+    }
+
+    #playBtn, #nextBtn {
+      background: #d83636;
+      color: white;
+      border: none;
+      padding: 15px 40px;
+      border-radius: 25px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      box-shadow: 0 6px 10px rgba(214, 51, 51, 0.7);
+      transition: background 0.3s ease;
+      margin-top: 20px;
+    }
+
+    #playBtn:hover:not(:disabled), #nextBtn:hover {
+      background: #540031;
+    }
+
+    #playBtn:disabled {
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+
+    #instructionText {
+      font-size: 1.3rem;
+      color: #ffffff;
+      font-weight: 600;
+      margin-top: 20px;
+      user-select: none;
+      text-align: center;
+    }
+
+@media (max-width: 380px) {
+  .gallery-3d-stack {
+    height: 400px;
+  }
+}
+
+
+.shooting-stars {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.shooting-stars::before {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: -100px;
+  width: 2px;
+  height: 2px;
+  background: white;
+  box-shadow: 0 0 6px 2px white;
+  transform: rotate(45deg);
+  animation: shoot 4s ease-in-out infinite;
+}
+
+@keyframes shoot {
+  0% {
+    transform: translate(0, 0) rotate(45deg);
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(600px, 600px) rotate(45deg);
+    opacity: 0;
+  }
+}
+
+.sparkle-container {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.sparkle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: white;
+  border-radius: 50%;
+  box-shadow: 0 0 8px white;
+  animation: float 6s linear infinite;
+}
+
+.sparkle:nth-child(1) {
+  top: 10%;
+  left: 20%;
+  animation-delay: 0s;
+}
+.sparkle:nth-child(2) {
+  top: 30%;
+  left: 70%;
+  animation-delay: 2s;
+}
+.sparkle:nth-child(3) {
+  top: 50%;
+  left: 40%;
+  animation-delay: 4s;
+}
+
+@keyframes float {
+  0% { transform: translateY(0); opacity: 1; }
+  100% { transform: translateY(-100px); opacity: 0; }
+}
+
+#content-wrapper {
+  position: relative;
+  z-index: 2; 
+  width: 100%;
+}
+
+
+
+#screen3 {
+  background-color: #7e0664; 
+  position: relative;
+  z-index: 2;
+}
+
+#birthdayVideo {
+  background-color: #7e0664; 
+  position: relative;
+  z-index: 3;
+}
+
+video {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+}
+
+.cherry-decoration {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background-color: var(--cherry-color);
+  border-radius: 50%;
+  z-index: 6;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+  transform: translate(-50%, -50%);
+}
+
+
+.cherry-decoration::after {
+  content: '';
+  position: absolute;
+  width: 2px;
+  height: 7px;
+  background: #3a3a3a;
+  top: -7px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 1px;
+}
+
+
+.cherry1  { top: 30px;  left: 40px; }
+.cherry2  { top: 24px;  left: 60px; }
+.cherry3  { top: 24px;  left: 90px; }
+.cherry4  { top: 30px;  left: 110px; }
+.cherry5  { top: 50px;  left: 120px; }
+.cherry6  { top: 64px;  left: 105px; }
+.cherry7  { top: 70px;  left: 75px; }
+.cherry8  { top: 64px;  left: 45px; }
+.cherry9  { top: 50px;  left: 30px; }
+
+
+
+  </style>
+</head>
+<body>
+
+
+<div class="shooting-stars"></div>
+<div class="sparkle-container">
+  <div class="sparkle"></div>
+  <div class="sparkle"></div>
+  <div class="sparkle"></div>
+</div>
+
+
+<div id="screen1" class="active">
+  <div class="box-canvas" id="cake-container">
+    <div class="plate"></div>
+    <div class="cake-side"></div>
+    <div class="cake-top"></div>
+   
+    <div class="drips">
+      <div class="drip"></div><div class="drip"></div><div class="drip"></div><div class="drip"></div>
+      <div class="drip"></div><div class="drip"></div><div class="drip"></div><div class="drip"></div>
+    </div>
+
+  <div class="cherry-decoration cherry1"></div>
+  <div class="cherry-decoration cherry2"></div>
+  <div class="cherry-decoration cherry3"></div>
+  <div class="cherry-decoration cherry4"></div>
+  <div class="cherry-decoration cherry5"></div>
+  <div class="cherry-decoration cherry6"></div>
+  <div class="cherry-decoration cherry7"></div>
+  <div class="cherry-decoration cherry8"></div>
+  <div class="cherry-decoration cherry9"></div>
+  
+
+    <div class="candle" id="candle">
+      <div class="flame" id="flame"></div>
+    </div>
+    <div class="puff" id="puff">💨</div>
+  </div>
+  <div id="instructionText">Blow the candle 🎂💨</div>
+  <button id="playBtn" disabled>Play</button>
+</div>
+
+<div id="screen3">
+  <video id="birthdayVideo" controls preload="auto">
+    <source src="hapibday.mp4" type="video/mp4" />
+    Your browser does not support the video tag.
+  </video>
+</div>
+
+ 
+
+<script>
+  const candle = document.getElementById("candle");
+  const flame = document.getElementById("flame");
+  const puff = document.getElementById("puff");
+  const playBtn = document.getElementById("playBtn");
+  const nextBtn = document.getElementById("nextBtn");
+  const instructionText = document.getElementById("instructionText");
+  const screen1 = document.getElementById("screen1");
+  const screen3 = document.getElementById("screen3");
+  const birthdayVideo = document.getElementById("birthdayVideo");
+  
+  let audioContext;
+  let analyser;
+  let microphone;
+  let dataArray;
+  let isBlown = false;
+
+  function startMic() {
+    navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+      audioContext = new AudioContext();
+      microphone = audioContext.createMediaStreamSource(stream);
+      analyser = audioContext.createAnalyser();
+      microphone.connect(analyser);
+      analyser.fftSize = 256;
+      const bufferLength = analyser.frequencyBinCount;
+      dataArray = new Uint8Array(bufferLength);
+      listenVolume();
+    }).catch(e => alert("Mic error: " + e.message));
+  }
+
+  function listenVolume() {
+    if (isBlown) return;
+    analyser.getByteFrequencyData(dataArray);
+    let avg = dataArray.reduce((a, b) => a + b) / dataArray.length;
+    if (avg > 50) blowOutCandle();
+    else requestAnimationFrame(listenVolume);
+  }
+
+  function blowOutCandle() {
+    if (isBlown) return;
+    isBlown = true;
+    flame.style.animation = "fadeOut 1s forwards";
+    puff.style.opacity = "1";
+    puff.style.transform = "translateX(-50%) translateY(-25px)";
+    setTimeout(() => {
+      flame.style.opacity = "0";
+      puff.style.opacity = "0";
+      playBtn.disabled = false;
+      instructionText.textContent = "Click Play to watch the video 🎉";
+    }, 1200);
+  }
+
+  playBtn.onclick = () => {
+    screen1.classList.remove("active");
+    screen3.classList.add("active");
+    birthdayVideo.play();
+  };
+
+  birthdayVideo.addEventListener("ended", () => {
+    nextBtn.disabled = false;
+  });
+
+  window.onload = () => startMic();
+</script>
+</body>
+</html>
